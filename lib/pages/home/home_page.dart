@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mytodolist/pages/add_event/add_event_widget.dart';
 import 'package:mytodolist/pages/home/menu_page.dart';
 import 'package:mytodolist/utils/app_constants.dart';
 import 'package:mytodolist/utils/dimensions.dart';
+import 'package:http/http.dart' as http;
 import 'package:mytodolist/utils/globalvariables.dart';
 import 'package:mytodolist/widgets/app_icon.dart';
 import 'package:mytodolist/widgets/big_text.dart';
 import 'package:mytodolist/widgets/small_text.dart';
+import 'package:mytodolist/widgets/task.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,9 +22,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List? tasks;
+  @override
+  void initState() {
+    super.initState();
+    getTasks();
+    print(tasks);
+  }
+
+  PageController pageController = PageController();
+  void getTasks() async {
+    var url = Uri.parse('http://192.168.1.12:3000/get-tasks');
+    var headers = {'Content-Type': 'application/json'};
+    var response = await http.get(url, headers: headers);
+    var jsonResponse = jsonDecode(response.body);
+    tasks = jsonResponse['success'];
+    setState(() {
+
+    });
+  }
+  void refreshTasks() {
+    getTasks();
+  }
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(child: Scaffold(
       drawer: const MenuPage(),
       appBar: AppBar(
@@ -191,171 +216,17 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Expanded(child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
+            child:tasks?.length==null?Container(): Column(
               children: [
-                SizedBox(height: Dimensions.height20,),
-                Container(
-                  margin: EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10),
-                  height: Dimensions.height100,
-                  decoration:  BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(Dimensions.radius20),
-                      color: Colors.white
-                  ),
-                  padding: EdgeInsets.all(Dimensions.width15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BigText(text: "Meeting with client"),
-                          SizedBox(height: Dimensions.height10,),
-                          SmallText(text: "Feb 10, Message Mobile App UI",size: Dimensions.font15,)
-                        ],
-                      ),
-                      Center(
-                        child: BigText(text: "Completed",color: Colors.green,),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(height: Dimensions.height20,),
-                Container(
-                  margin: EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10),
-                  height: Dimensions.height100,
-                  decoration:  BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(Dimensions.radius20),
-                      color: Colors.white
-                  ),
-                  padding: EdgeInsets.all(Dimensions.width15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BigText(text: "Design Revisions"),
-                          SizedBox(height: Dimensions.height10,),
-                          SmallText(text: "Feb 12, Book Mobile App UI",size: Dimensions.font15,)
-                        ],
-                      ),
-                      Center(
-                        child: BigText(text: "On Going",color: Colors.orangeAccent,),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(height: Dimensions.height20,),
-                Container(
-                  margin: EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10),
-                  height: Dimensions.height100,
-                  decoration:  BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(Dimensions.radius20),
-                      color: Colors.white
-                  ),
-                  padding: EdgeInsets.all(Dimensions.width15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BigText(text: "Meeting with client"),
-                          SizedBox(height: Dimensions.height10,),
-                          SmallText(text: "Feb 10, Message Mobile App UI",size: Dimensions.font15,)
-                        ],
-                      ),
-                      Center(
-                        child: BigText(text: "Completed",color: Colors.green,),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(height: Dimensions.height20,),
-                Container(
-                  margin: EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10),
-                  height: Dimensions.height100,
-                  decoration:  BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(Dimensions.radius20),
-                      color: Colors.white
-                  ),
-                  padding: EdgeInsets.all(Dimensions.width15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BigText(text: "Design Revisions"),
-                          SizedBox(height: Dimensions.height10,),
-                          SmallText(text: "Feb 12, Book Mobile App UI",size: Dimensions.font15,)
-                        ],
-                      ),
-                      Center(
-                        child: BigText(text: "On Going",color: Colors.orangeAccent,),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(height: Dimensions.height20,),
-                Container(
-                  margin: EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10),
-                  height: Dimensions.height100,
-                  decoration:  BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(Dimensions.radius20),
-                      color: Colors.white
-                  ),
-                  padding: EdgeInsets.all(Dimensions.width15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BigText(text: "Meeting with client"),
-                          SizedBox(height: Dimensions.height10,),
-                          SmallText(text: "Feb 10, Message Mobile App UI",size: Dimensions.font15,)
-                        ],
-                      ),
-                      Center(
-                        child: BigText(text: "Completed",color: Colors.green,),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(height: Dimensions.height20,),
-                Container(
-                  margin: EdgeInsets.only(left: Dimensions.width10,right: Dimensions.width10),
-                  height: Dimensions.height100,
-                  decoration:  BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(Dimensions.radius20),
-                      color: Colors.white
-                  ),
-                  padding: EdgeInsets.all(Dimensions.width15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BigText(text: "Design Revisions"),
-                          SizedBox(height: Dimensions.height10,),
-                          SmallText(text: "Feb 12, Book Mobile App UI",size: Dimensions.font15,)
-                        ],
-                      ),
-                      Center(
-                        child: BigText(text: "On Going",color: Colors.orangeAccent,),
-                      )
-                    ],
-                  ),
-                ),
+
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: tasks?.length,
+                      itemBuilder: (_,index){
+                        return TaskContainer(taskTitle: '${tasks?[index]['taskTitle']}',taskDate:'${tasks?[index]['taskDate']}',taskDescription: '${tasks?[index]['taskDescription']}');
+                      }),
+
 
               ],
             ),
@@ -370,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                   builder: (BuildContext context) {
                     return Container(
                       //height: MediaQuery.of(context).size.height * 0.8,
-                      child: AddEvent(),
+                      child: AddEvent(refreshTasks: refreshTasks),
                     );
                   },
                 );

@@ -1,25 +1,38 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mytodolist/routes/route_helper.dart';
+import 'package:mytodolist/service/task_services.dart';
 import 'package:mytodolist/utils/dimensions.dart';
 import 'package:mytodolist/utils/globalvariables.dart';
+import 'package:http/http.dart' as http;
 import 'package:mytodolist/widgets/app_text_field.dart';
 import 'package:mytodolist/widgets/big_text.dart';
 import 'package:get/get.dart';
 class AddEvent extends StatefulWidget {
-  const AddEvent({Key? key}) : super(key: key);
+  final VoidCallback refreshTasks;
+  const AddEvent({Key? key, required this.refreshTasks}) : super(key: key);
 
   @override
   State<AddEvent> createState() => _AddEventState();
 }
 
 class _AddEventState extends State<AddEvent> {
-
   final titleController= TextEditingController();
   final descriptionController= TextEditingController();
   final timeController= TextEditingController();
   final dateController= TextEditingController();
   String selectedCategory = "Personal";
   String selected="on";
+  List? tasks;
+  final TaskServices taskServices= TaskServices();
+  //add task
+  void addTask(){
+    taskServices.saveTask(titleController.text, descriptionController.text, selectedCategory,timeController.text,dateController.text);
+    widget.refreshTasks();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -79,7 +92,7 @@ class _AddEventState extends State<AddEvent> {
                         },
                         child: Container(
                           height: Dimensions.height50,
-                          width: Dimensions.width180,
+                          width: Dimensions.width150,
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey),
                             color: selectedCategory == "Personal"
@@ -96,7 +109,7 @@ class _AddEventState extends State<AddEvent> {
                           ),
                         ),
                       ),
-                      SizedBox(width: Dimensions.width10,),
+                      //SizedBox(width: Dimensions.width10,),
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -105,7 +118,7 @@ class _AddEventState extends State<AddEvent> {
                         },
                         child: Container(
                           height: Dimensions.height50,
-                          width: Dimensions.width180,
+                          width: Dimensions.width150,
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey),
                               color: selectedCategory == "Work"
@@ -137,16 +150,15 @@ class _AddEventState extends State<AddEvent> {
                         children: [
                           BigText(text: "Date"),
                           SizedBox(height: Dimensions.height5,),
-                          AppTextField(hintText: "dd/mm/yy", textController: dateController,height: Dimensions.height60 ,width: Dimensions.width180,icon: Icons.calendar_month_outlined,)
+                          AppTextField(hintText: "dd/mm/yy", textController: dateController,height: Dimensions.height60 ,width: Dimensions.width150,icon: Icons.calendar_month_outlined,)
                         ],
                       ),
-                      SizedBox(width: Dimensions.width10,),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           BigText(text: "Time"),
                           SizedBox(height: Dimensions.height5,),
-                          AppTextField(hintText: "hh:mm", textController: timeController,height: Dimensions.height60 ,width: Dimensions.width180,icon: Icons.access_time_outlined,)
+                          AppTextField(hintText: "hh:mm", textController: timeController,height: Dimensions.height60 ,width: Dimensions.width150,icon: Icons.access_time_outlined,)
                         ],
                       )
                     ],
@@ -178,19 +190,25 @@ class _AddEventState extends State<AddEvent> {
                         ),
                       ),
                       SizedBox(width: Dimensions.width30,),
-                      Container(
-                        height: Dimensions.height50,
-                        width: Dimensions.width150,
-                        decoration: BoxDecoration(
-                            color: GlobalVariables.primaryColor,
-                            borderRadius: BorderRadius.circular(Dimensions.radius10)
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            BigText(text: "Create",color: Colors.white,size: Dimensions.font18,),
+                      GestureDetector(
+                        onTap: (){
+                          addTask();
+                          Navigator.of(context).pop();
+                        },
+                        child: Container(
+                          height: Dimensions.height50,
+                          width: Dimensions.width150,
+                          decoration: BoxDecoration(
+                              color: GlobalVariables.primaryColor,
+                              borderRadius: BorderRadius.circular(Dimensions.radius10)
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              BigText(text: "Create",color: Colors.white,size: Dimensions.font18,),
 
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],
