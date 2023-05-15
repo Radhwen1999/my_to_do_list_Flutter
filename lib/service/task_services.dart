@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:mytodolist/utils/globalvariables.dart';
 import '../model/task.dart';
 import '../widgets/show_custom_snackbar.dart';
 class TaskServices{
@@ -11,7 +12,7 @@ class TaskServices{
        String taskTime,
       String taskDate,
       ) async {
-    var url = Uri.parse('http://192.168.1.12:3000/add-task');
+    var url = Uri.parse('${GlobalVariables().uri}/add-task');
     var headers = {'Content-Type': 'application/json'};
     var body = {
       'taskTitle': taskTitle,

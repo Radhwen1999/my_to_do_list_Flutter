@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
 
   PageController pageController = PageController();
   void getTasks() async {
-    var url = Uri.parse('http://192.168.1.12:3000/get-tasks');
+    var url = Uri.parse('${GlobalVariables().uri}/get-tasks');
     var headers = {'Content-Type': 'application/json'};
     var response = await http.get(url, headers: headers);
     var jsonResponse = jsonDecode(response.body);
